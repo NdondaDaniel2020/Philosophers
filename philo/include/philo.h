@@ -10,4 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PHILO_H
+# define PHILO_H
 
+# include <stdio.h>
+# include <stdlib.h>
+# include <pthread.h>
+# include <sys/time.h>
+# include <unistd.h>
+# include <string.h>
+
+void	error(void);
+
+int		str_isdigit(char *str);
+int		ft_atoi(const char *nptr);
+
+#endif

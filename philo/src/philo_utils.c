@@ -12,41 +12,58 @@
 
 #include "philo.h"
 
-void	master(int number_of_philosophers, int time_to_die, int time_to_eat,
-	int time_to_sleep, int number_of_times_each_philosopher_must_eat)
+void	error(void)
 {
-	printf("[num %i], [die %i] [eat %i] [sleep %i] [each philoso %i]\n",
-	number_of_philosophers, time_to_die, time_to_eat, 
-		time_to_sleep, number_of_times_each_philosopher_must_eat);
+	write(2, "ERROR\n", 6);
+	write(2, "<number_of_philosophers> <time_to_die> <time_to_eat> ", 53);
+	write(2, "<time_to_sleep> <number_of_times_each_philosopher_must_eat>", 59);
+	exit (1);
 }
 
-// number_of_philosophers, time_to_die, time_to_eat,
-// time_to_sleep, [number_of_times_each_philosopher_must_eat]
+static int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
 
-int	main(int ac, char **av)
+int	str_isdigit(char *str)
 {
 	int	i;
-	int	n;
+
+	i = 1;
+	while (i && *str)
+	{
+		if (i == '+')
+			i = 1;
+		else
+			i = ft_isdigit(*str);
+		++str;
+	}
+	return (i);
+}
+
+int	ft_atoi(const char *nptr)
+{
+	int	i;
+	int	s;
+	int	r;
 
 	i = 0;
-	n = 1;
-	if (ac == 4 || ac == 5)
+	s = 1;
+	r = 0;
+	while ((nptr[i] >= '\a' && nptr[i] <= '\r') || nptr[i] == ' ')
+		i++;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		while (n)
-			n = str_isdigit(av[i]);
-		if (n == 0)
-			error();
-		if (ac == 4)
-		{
-			master(ft_atoi(av[1]), ft_atoi(av[2]),
-				ft_atoi(av[3]), ft_atoi(av[4]), -1);
-		}
-		else
-		{
-			master(ft_atoi(av[1]), ft_atoi(av[2]),
-				ft_atoi(av[3]), ft_atoi(av[4]), ft_atoi(av[5]));
-		}
+		if (nptr[i] == '-')
+			s *= -1;
+		i++;
 	}
-	else
-		error();
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		r = (nptr[i] - '0') + (r * 10);
+		i++;
+	}
+	return (r * s);
 }
