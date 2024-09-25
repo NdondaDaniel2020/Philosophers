@@ -12,12 +12,41 @@
 
 #include "philo.h"
 
-void	error(void)
+void	error(int i, t_data *data)
 {
 	write(2, "ERROR\n", 6);
-	write(2, "<number_of_philosophers> <time_to_die> <time_to_eat> ", 53);
-	write(2, "<time_to_sleep> <number_of_times_each_philosopher_must_eat>", 59);
+	if (i == 1)
+	{
+		write(2, "<number_of_philosophers> <time_to_die> <time_to_eat> ", 53);
+		write(2, "<time_to_sleep> <number_of_times_each_philosopher_must_eat>", 59);
+	}
+	free_data(data);
 	exit (1);
+}
+
+void	free_data(t_data *data)
+{
+	if (data->fork)
+		free(data->fork);
+	if (data->thread)
+		free(data->thread);
+}
+
+void	init_data(t_data *data, int number_of_philosophers)
+{
+	int	i = 0;
+
+	data->fork = malloc(sizeof(int) * number_of_philosophers);
+	if (!data->fork)
+		error(0, data);
+	data->thread = malloc(sizeof(pthread_t) * number_of_philosophers);
+	if (!data->thread)
+		error(0, data);
+	while (i < number_of_philosophers)
+	{
+		data->fork[i] = 0;
+		i++;
+	}
 }
 
 static int	ft_isdigit(int c)

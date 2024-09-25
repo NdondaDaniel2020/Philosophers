@@ -30,12 +30,16 @@ $(NAME):
 	@$(CC) $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
 	@$(CC) $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
 
+r:
+	@$(CC) rascunho.c -o ./r
+
 clean:
 	@/bin/rm -f $(OBJ)
 
 fclean: clean
 	@/bin/rm -f $(NAME)
 
+
 re:     fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus clean fclean re r

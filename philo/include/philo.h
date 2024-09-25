@@ -20,7 +20,16 @@
 # include <unistd.h>
 # include <string.h>
 
-void	error(void);
+typedef struct s_data
+{
+	int				*fork;
+	pthread_t		*thread;
+	pthread_mutex_t	mutex;
+}					t_data;
+
+void	free_data(t_data *data);
+void	error(int i, t_data *data);
+void	init_data(t_data *data, int number_of_philosophers);
 
 int		str_isdigit(char *str);
 int		ft_atoi(const char *nptr);

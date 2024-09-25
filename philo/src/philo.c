@@ -12,41 +12,43 @@
 
 #include "philo.h"
 
-void	master(int number_of_philosophers, int time_to_die, int time_to_eat,
-	int time_to_sleep, int number_of_times_each_philosopher_must_eat)
+void	master(int ac, char **av, t_data *data)
 {
-	printf("[num %i], [die %i] [eat %i] [sleep %i] [each philoso %i]\n",
-	number_of_philosophers, time_to_die, time_to_eat, 
-		time_to_sleep, number_of_times_each_philosopher_must_eat);
-}
+	int	number_of_philosophers;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	number_of_times_each_philosopher_must_eat;
 
-// number_of_philosophers, time_to_die, time_to_eat,
-// time_to_sleep, [number_of_times_each_philosopher_must_eat]
+	number_of_philosophers = ft_atoi(av[1]);
+	time_to_die = ft_atoi(av[2]);
+	time_to_eat = ft_atoi(av[3]);
+	time_to_sleep = ft_atoi(av[4]);
+	number_of_times_each_philosopher_must_eat = -1;
+	if (ac == 6)
+		number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+	init_data(data, number_of_philosophers);
+}
 
 int	main(int ac, char **av)
 {
-	int	i;
-	int	n;
+	int		i;
+	int		n;
+	t_data	data;
 
-	i = 0;
+	i = 1;
 	n = 1;
-	if (ac == 4 || ac == 5)
+	if (ac == 6 || ac == 5)
 	{
-		while (n)
+		while (av[i] && n)
+		{
 			n = str_isdigit(av[i]);
+			i++;
+		}
 		if (n == 0)
-			error();
-		if (ac == 4)
-		{
-			master(ft_atoi(av[1]), ft_atoi(av[2]),
-				ft_atoi(av[3]), ft_atoi(av[4]), -1);
-		}
-		else
-		{
-			master(ft_atoi(av[1]), ft_atoi(av[2]),
-				ft_atoi(av[3]), ft_atoi(av[4]), ft_atoi(av[5]));
-		}
+			error(1, &data);
+		master(ac, av, &data);
 	}
 	else
-		error();
+		error(1, &data);
 }
