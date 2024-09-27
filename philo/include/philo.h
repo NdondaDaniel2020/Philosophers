@@ -22,14 +22,20 @@
 
 typedef struct s_data
 {
-	int				*fork;
+	int				id;
 	pthread_t		*thread;
 	pthread_mutex_t	mutex;
+	int				*fork;
+	int				number_of_philosophers;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				number_of_times_each_philosopher_must_eat;
 }					t_data;
 
 void	free_data(t_data *data);
 void	error(int i, t_data *data);
-void	init_data(t_data *data, int number_of_philosophers);
+void	init_data(t_data *data, int ac, char **av);
 
 int		str_isdigit(char *str);
 int		ft_atoi(const char *nptr);

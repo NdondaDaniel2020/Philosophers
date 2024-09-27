@@ -12,22 +12,44 @@
 
 #include "philo.h"
 
+void	*philo(void *arg_data)
+{
+	int		*id;
+	t_data	*data;
+
+	data = (t_data *)arg_data;
+	id = malloc(sizeof(int));
+	*id = data->id;
+	while (1)
+	{
+		pthread_mutex_lock(&data->mutex);
+		printf("Test %i\n", *id);
+		pthread_mutex_unlock(&data->mutex);
+	}
+	return ((void *)"0");
+}
+
 void	master(int ac, char **av, t_data *data)
 {
-	int	number_of_philosophers;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	number_of_times_each_philosopher_must_eat;
+	int	i;
 
-	number_of_philosophers = ft_atoi(av[1]);
-	time_to_die = ft_atoi(av[2]);
-	time_to_eat = ft_atoi(av[3]);
-	time_to_sleep = ft_atoi(av[4]);
-	number_of_times_each_philosopher_must_eat = -1;
-	if (ac == 6)
-		number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
-	init_data(data, number_of_philosophers);
+	i = 0;
+	init_data(data, ac, av);
+	pthread_mutex_init(&data->mutex, NULL);
+	while (i < data->number_of_philosophers)
+	{
+		data->id = i;
+		pthread_create(&data->thread[i], NULL, philo, (void *)data);
+		i++;
+	}
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_join(data->thread[i], NULL);
+		i++;
+	}
+	pthread_mutex_destroy(&data->mutex);
+	free_data(data);
 }
 
 int	main(int ac, char **av)

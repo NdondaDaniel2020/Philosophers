@@ -32,21 +32,29 @@ void	free_data(t_data *data)
 		free(data->thread);
 }
 
-void	init_data(t_data *data, int number_of_philosophers)
+void	init_data(t_data *data, int ac, char **av)
 {
-	int	i = 0;
+	int	i;
 
-	data->fork = malloc(sizeof(int) * number_of_philosophers);
+	i = 0;
+	data->fork = malloc(sizeof(int) * data->number_of_philosophers);
 	if (!data->fork)
 		error(0, data);
-	data->thread = malloc(sizeof(pthread_t) * number_of_philosophers);
+	data->thread = malloc(sizeof(pthread_t) * data->number_of_philosophers);
 	if (!data->thread)
 		error(0, data);
-	while (i < number_of_philosophers)
+	while (i < data->number_of_philosophers)
 	{
 		data->fork[i] = 0;
 		i++;
 	}
+	data->number_of_philosophers = ft_atoi(av[1]);
+	data->time_to_die = ft_atoi(av[2]);
+	data->time_to_eat = ft_atoi(av[3]);
+	data->time_to_sleep = ft_atoi(av[4]);
+	data->number_of_times_each_philosopher_must_eat = -1;
+	if (ac == 6)
+		data->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 }
 
 static int	ft_isdigit(int c)
