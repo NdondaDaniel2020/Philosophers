@@ -20,7 +20,7 @@
 # include <unistd.h>
 # include <string.h>
 
-typedef struct s_data
+typedef struct s_all_data_philo
 {
 	int				id;
 	pthread_t		*thread;
@@ -31,11 +31,21 @@ typedef struct s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_times_each_philosopher_must_eat;
-}					t_data;
+}					t_all_data_philo;
 
-void	free_data(t_data *data);
-void	error(int i, t_data *data);
-void	init_data(t_data *data, int ac, char **av);
+typedef struct s_data_philo
+{
+	int					id;
+	t_all_data_philo	*all_data;
+}						t_data_philo;
+
+void	error(void);
+void	free_all_data(t_all_data_philo *data);
+
+void	*philo_thread(void *arg_data);
+
+void	init_data_philo(t_data_philo **data, int ac, char **av);
+void	init_all_data_philo(t_all_data_philo *data, int ac, char **av);
 
 int		str_isdigit(char *str);
 int		ft_atoi(const char *nptr);
