@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philo_utils_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmatondo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -19,12 +19,16 @@ void	error(void)
 	write(2, "<time_to_sleep> <number_of_times_each_philosopher_must_eat>", 59);
 }
 
-void	free_all_data(t_all_data_philo *data)
+long	current_time(struct timeval init_tv)
 {
-	if (data->fork)
-		free(data->fork);
-	if (data->thread)
-		free(data->thread);
+	long			re;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	re = ((tv.tv_sec - init_tv.tv_sec) * 1000)
+		+ ((tv.tv_usec - init_tv.tv_usec) / 1000);
+	return (re);
+	
 }
 
 static int	ft_isdigit(int c)
