@@ -28,6 +28,7 @@ typedef struct s_all_data_philo
 	pthread_mutex_t	mutex;
 	int				*fork;
 	bool			is_dead;
+	bool			monitor;
 	int				number_of_philosophers;
 	int				time_to_die;
 	int				time_to_eat;

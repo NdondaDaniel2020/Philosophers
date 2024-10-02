@@ -19,6 +19,7 @@ void	init_all_data_philo(t_all_data_philo *data, int ac, char **av) /*Prevenir d
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->is_dead = false;
+	data->monitor = false;
 	data->time_to_sleep = ft_atoi(av[4]);
 	data->number_of_times_each_philosopher_must_eat = -1;
 	if (ac == 6)
@@ -48,7 +49,7 @@ void	init_data_philo(t_data_philo **data, int ac, char **av)
 	*data = malloc(sizeof(t_data_philo) * all_data->number_of_philosophers);
 	while (i < all_data->number_of_philosophers)
 	{
-		(*data)[i].id = i + 1;
+		(*data)[i].id = i;
 		(*data)[i].all_data = all_data;
 		i++;
 	}

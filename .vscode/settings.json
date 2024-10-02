@@ -57,7 +57,9 @@
 	"streambuf": "c",
 	"stdio.h": "c",
 	"string.h": "c",
-	"philo.h": "c"
+	"philo.h": "c",
+	"variant": "c",
+	"text_encoding": "c"
 },
 "editor.insertSpaces": false,
 "editor.detectIndentation": false

@@ -16,19 +16,28 @@ bool take_a_fork(t_data_philo *data)
 {
 	pthread_mutex_lock(&data->all_data->mutex);
 	if (!data->all_data->fork[data->id]
-		&& !data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers])
+		&& !data->all_data->fork[(data->id + 1)
+			% data->all_data->number_of_philosophers])
 	{	
-		data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 1;	
+		if (data->id == ((data->id + 1)
+			% data->all_data->number_of_philosophers))
+		{
+			pthread_mutex_unlock(&data->all_data->mutex);
+			return (false);
+		}
+		data->all_data->fork[(data->id + 1)
+			% data->all_data->number_of_philosophers] = 1;	
 		data->all_data->fork[data->id] = 1;
 		pthread_mutex_unlock(&data->all_data->mutex);
-
-		printf("%ld %i has taken a fork\n", current_time(data->all_data->init_timeval), data->id);
-		return (1);
+		if (!data->all_data->monitor)
+			printf("%ld %i has taken a fork\n",
+				current_time(data->all_data->init_timeval), data->id);
+		return (true);
 	}
 	else
 	{
 		pthread_mutex_unlock(&data->all_data->mutex);
-		return (0);
+		return (false);
 	}
 }
 
@@ -41,7 +50,9 @@ void	is_eating(t_data_philo *data)
 		pthread_mutex_unlock(&data->all_data->mutex);
 	}
 	data->last_meal_time = current_time(data->all_data->init_timeval);
-	printf("%ld %i is eating\n", current_time(data->all_data->init_timeval), data->id);
+	if (!data->all_data->monitor)
+		printf("%ld %i is eating\n",
+			current_time(data->all_data->init_timeval), data->id);
 	usleep(data->all_data->time_to_eat * 1000);
 	pthread_mutex_lock(&data->all_data->mutex);
 	data->all_data->fork[data->id] = 0;
@@ -53,7 +64,9 @@ void	is_eating(t_data_philo *data)
 
 void	is_sleeping(t_data_philo *data)
 {
-	printf("%ld %i is sleeping\n", current_time(data->all_data->init_timeval), data->id);
+	if (!data->all_data->monitor)
+		printf("%ld %i is sleeping\n",
+			current_time(data->all_data->init_timeval), data->id);
 	usleep(data->all_data->time_to_sleep * 1000);
 }
 
@@ -71,6 +84,7 @@ void	*philo_thread(void *arg_data)
 		{
 			printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id);
 			data->all_data->is_dead = true;
+			data->all_data->monitor = true;
 		}
 		if (data->all_data->is_dead)
 			return (NULL);
@@ -80,7 +94,7 @@ void	*philo_thread(void *arg_data)
 			is_eating(data);
 			is_sleeping(data);
 		}
-		if (!think)
+		else if (!think)
 		{
 			think = true;
 			printf("%ld %i is thinking\n", current_time(data->all_data->init_timeval), data->id);
