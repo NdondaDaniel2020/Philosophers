@@ -15,26 +15,21 @@
 bool take_a_fork(t_data_philo *data)
 {
 	pthread_mutex_lock(&data->all_data->mutex);
-	if (!data->all_data->fork[data->id])
+	if (!data->all_data->fork[data->id]
+		&& !data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers])
+	{	
+		data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 1;	
 		data->all_data->fork[data->id] = 1;
+		pthread_mutex_unlock(&data->all_data->mutex);
+
+		printf("%ld %i has taken a fork\n", current_time(data->all_data->init_timeval), data->id);
+		return (1);
+	}
 	else
 	{
 		pthread_mutex_unlock(&data->all_data->mutex);
 		return (0);
 	}
-	if (!data->all_data->fork[(data->id + 1)
-		% data->all_data->number_of_philosophers])
-		data->all_data->fork[(data->id + 1)
-			% data->all_data->number_of_philosophers] = 1;
-	else
-	{
-		pthread_mutex_unlock(&data->all_data->mutex);
-		return (0);
-	}
-	pthread_mutex_unlock(&data->all_data->mutex);
-	printf("%ld %i has taken a fork\n", 
-		current_time(data->all_data->init_timeval), data->id);
-	return (1);
 }
 
 void	is_eating(t_data_philo *data)
@@ -45,68 +40,52 @@ void	is_eating(t_data_philo *data)
 		data->all_data->number_of_times_each_philosopher_must_eat--;
 		pthread_mutex_unlock(&data->all_data->mutex);
 	}
+	data->last_meal_time = current_time(data->all_data->init_timeval);
 	printf("%ld %i is eating\n", current_time(data->all_data->init_timeval), data->id);
-	data->all_data->time_without_eat = 0;
-	usleep(data->all_data->time_to_eat);
+	usleep(data->all_data->time_to_eat * 1000);
+	pthread_mutex_lock(&data->all_data->mutex);
 	data->all_data->fork[data->id] = 0;
 	data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 0;
+	pthread_mutex_unlock(&data->all_data->mutex);
 	if (data->all_data->number_of_times_each_philosopher_must_eat == 0)
-	{
 		data->all_data->is_dead = true;
-	}
 }
 
 void	is_sleeping(t_data_philo *data)
 {
-	printf("%ld %i is sleeping\n", 
-		current_time(data->all_data->init_timeval), data->id);
-	usleep(data->all_data->time_to_sleep);
+	printf("%ld %i is sleeping\n", current_time(data->all_data->init_timeval), data->id);
+	usleep(data->all_data->time_to_sleep * 1000);
 }
 
 void	*philo_thread(void *arg_data)
 {
+	bool			think;
 	t_data_philo	*data;
 
+	think = false;
 	data = (t_data_philo *)arg_data;
 	while (true)
 	{
-		if (data->all_data->time_without_eat > data->all_data->time_to_die)
+		data->time_without_eat = current_time(data->all_data->init_timeval) - data->last_meal_time;
+		if (data->time_without_eat > data->all_data->time_to_die)
 		{
-			printf("%ld %i died\n",
-				current_time(data->all_data->init_timeval), data->id);
+			printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id);
 			data->all_data->is_dead = true;
 		}
 		if (data->all_data->is_dead)
-			return ((void *)"0");
-
-
-
+			return (NULL);
 		if (take_a_fork(data))
 		{
+			think = false;
 			is_eating(data);
 			is_sleeping(data);
 		}
-		printf("%ld %i is thinking\n",
-			current_time(data->all_data->init_timeval), data->id);
-
-		data->all_data->time_without_eat = current_time(data->all_data->init_timeval);
-
-
-		printf("{%d}\n", data->all_data->time_without_eat);
-		// if (data->id == 0)
-		// 	printf("\033[90m%ld\033[m\n", current_time(data->all_data->init_timeval));
-		// if (data->id == 1)
-		// 	printf("\033[91m%ld\033[m\n", current_time(data->all_data->init_timeval));
-		// if (data->id == 2)
-		// 	printf("\033[92m%ld\033[m\n", current_time(data->all_data->init_timeval));
-		// if (data->id == 3)
-		// 	printf("\033[93m%ld\033[m\n", current_time(data->all_data->init_timeval));
-		// if (data->id == 4)
-		// 	printf("\033[94m%ld\033[m\n", current_time(data->all_data->init_timeval));
-	
-		usleep(1);
+		if (!think)
+		{
+			think = true;
+			printf("%ld %i is thinking\n", current_time(data->all_data->init_timeval), data->id);
+		}
 	}
-	return ((void *)"0");
 }
 
 void	master(int ac, char **av, t_data_philo *data)

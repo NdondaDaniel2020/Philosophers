@@ -30,10 +30,10 @@ typedef struct s_all_data_philo
 	bool			is_dead;
 	int				number_of_philosophers;
 	int				time_to_die;
-	int				time_without_eat;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_times_each_philosopher_must_eat;
+	int				number_of_times_philosophers_should_eat;
 	struct timeval	init_timeval;
 }					t_all_data_philo;
 
@@ -41,6 +41,8 @@ typedef struct s_data_philo
 {
 	int					id;
 	t_all_data_philo	*all_data;
+	long				time_without_eat;
+	long				last_meal_time;
 }						t_data_philo;
 
 
