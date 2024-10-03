@@ -82,9 +82,10 @@ void	*philo_thread(void *arg_data)
 		data->time_without_eat = current_time(data->all_data->init_timeval) - data->last_meal_time;
         
 		pthread_mutex_lock(&data->all_data->mutex);
-		if (data->time_without_eat > data->all_data->time_to_die)
+		if ((data->time_without_eat - 1) > data->all_data->time_to_die)
         {
 			printf("{time_without_eat [%ld] > time_to_die [%d]}\n", data->time_without_eat, data->all_data->time_to_die);
+			printf("{time_without_eat [%ld] > time_to_die [%d]}\n", (data->time_without_eat - 1), data->all_data->time_to_die);
             if (!data->all_data->monitor)
             {
                 printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id + 1);
