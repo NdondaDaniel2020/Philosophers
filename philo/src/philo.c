@@ -31,7 +31,7 @@ bool take_a_fork(t_data_philo *data)
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
 			printf("%ld %i has taken a fork\n",
-				current_time(data->all_data->init_timeval), data->id);
+				current_time(data->all_data->init_timeval), data->id + 1);
 		return (true);
 	}
 	else
@@ -52,7 +52,7 @@ void	is_eating(t_data_philo *data)
 	data->last_meal_time = current_time(data->all_data->init_timeval);
 	if (!data->all_data->monitor)
 		printf("%ld %i is eating\n",
-			current_time(data->all_data->init_timeval), data->id);
+			current_time(data->all_data->init_timeval), data->id + 1);
 	usleep(data->all_data->time_to_eat * 1000);
 	pthread_mutex_lock(&data->all_data->mutex);
 	data->all_data->fork[data->id] = 0;
@@ -66,7 +66,7 @@ void	is_sleeping(t_data_philo *data)
 {
 	if (!data->all_data->monitor)
 		printf("%ld %i is sleeping\n",
-			current_time(data->all_data->init_timeval), data->id);
+			current_time(data->all_data->init_timeval), data->id + 1);
 	usleep(data->all_data->time_to_sleep * 1000);
 }
 
@@ -80,12 +80,19 @@ void	*philo_thread(void *arg_data)
 	while (true)
 	{
 		data->time_without_eat = current_time(data->all_data->init_timeval) - data->last_meal_time;
+        
+		pthread_mutex_lock(&data->all_data->mutex);
 		if (data->time_without_eat > data->all_data->time_to_die)
-		{
-			printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id);
-			data->all_data->is_dead = true;
-			data->all_data->monitor = true;
-		}
+        {
+			printf("{time_without_eat [%ld] > time_to_die [%d]}\n", data->time_without_eat, data->all_data->time_to_die);
+            if (!data->all_data->monitor)
+            {
+                printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id + 1);
+                data->all_data->is_dead = true;
+                data->all_data->monitor = true;
+            }
+        }
+		pthread_mutex_unlock(&data->all_data->mutex);
 		if (data->all_data->is_dead)
 			return (NULL);
 		if (take_a_fork(data))
@@ -97,7 +104,7 @@ void	*philo_thread(void *arg_data)
 		else if (!think)
 		{
 			think = true;
-			printf("%ld %i is thinking\n", current_time(data->all_data->init_timeval), data->id);
+			printf("%ld %i is thinking\n", current_time(data->all_data->init_timeval), data->id + 1);
 		}
 	}
 }

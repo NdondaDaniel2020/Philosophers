@@ -28,7 +28,6 @@ long	current_time(struct timeval init_tv)
 	re = ((tv.tv_sec - init_tv.tv_sec) * 1000)
 		+ ((tv.tv_usec - init_tv.tv_usec) / 1000);
 	return (re);
-	
 }
 
 static int	ft_isdigit(int c)
