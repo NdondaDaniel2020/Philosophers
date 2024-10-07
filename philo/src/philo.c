@@ -12,87 +12,113 @@
 
 #include "philo.h"
 
-bool take_a_fork(t_data_philo *data)
+bool take_a_left_fork(t_data_philo *data)
 {
 	pthread_mutex_lock(&data->all_data->mutex);
-	if (!data->all_data->fork[data->id]
-		&& !data->all_data->fork[(data->id + 1)
-			% data->all_data->number_of_philosophers])
+	if (!data->all_data->fork[data->id])
 	{	
-		if (data->id == ((data->id + 1)
-			% data->all_data->number_of_philosophers))
-		{
-			pthread_mutex_unlock(&data->all_data->mutex);
-			return (false);
-		}
-		data->all_data->fork[(data->id + 1)
-			% data->all_data->number_of_philosophers] = 1;	
 		data->all_data->fork[data->id] = 1;
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork\n",
-				current_time(data->all_data->init_timeval), data->id + 1);
+			printf("%ld %i has taken a fork left\n", current_time(data->all_data->init_timeval), data->id + 1);
 		return (true);
 	}
 	else
-	{
 		pthread_mutex_unlock(&data->all_data->mutex);
+	return (false);
+}
+
+bool take_a_right_fork(t_data_philo *data)
+{
+	pthread_mutex_lock(&data->all_data->mutex);
+	if (!data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers])
+	{
+		data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 1;
+		pthread_mutex_unlock(&data->all_data->mutex);
+		if (!data->all_data->monitor)
+			printf("%ld %i has taken a fork right\n", current_time(data->all_data->init_timeval), data->id + 1);
+		return (true);
+	}
+	else
+		pthread_mutex_unlock(&data->all_data->mutex);
+	return (false);
+}
+
+bool take_a_fork(t_data_philo *data)
+{
+	bool	left;
+	bool	right;
+
+	left = false;
+	right = false;
+	if ((data->id + 1) == data->all_data->number_of_philosophers)
+	{
+		// printf("(([%i][%i]=[%i]))\n", data->id + 1, data->all_data->number_of_philosophers, data->id + 1 == data->all_data->number_of_philosophers);
+		// if (!data->have_a_fork)
+		
+		// printf("\n{{{%i}}} id=%i\n", data->have_a_fork, data->id);
+		// esquerda
+		left = take_a_left_fork(data);
+
+		// direita
+		right = take_a_right_fork(data);
+
+		if (left && right)
+			return (true);
+		if ((left || right) && data->have_a_fork)
+			return (true);
+
+	
+		else if (left || right)
+			data->have_a_fork = true;
+		return (false);
+	}
+	else
+	{
+		// printf("\n{{{%i}}} id=%i\n", data->have_a_fork, data->id);
+		if (!data->have_a_fork)
+	
+		// direita
+		right = take_a_right_fork(data);
+	
+		// esquerda
+		left = take_a_left_fork(data);
+
+		if (left && right)
+			return (true);
+		if ((left || right) && data->have_a_fork)
+			return (true);
+
+
+		else if (left || right)
+			data->have_a_fork = true;
 		return (false);
 	}
 }
 
-void	is_eating(t_data_philo *data)
-{
-	if (data->all_data->number_of_times_each_philosopher_must_eat > 0)
-	{
-		pthread_mutex_lock(&data->all_data->mutex);
-		data->all_data->number_of_times_each_philosopher_must_eat--;
-		pthread_mutex_unlock(&data->all_data->mutex);
-	}
-	data->last_meal_time = current_time(data->all_data->init_timeval);
-	if (!data->all_data->monitor)
-		printf("%ld %i is eating\n",
-			current_time(data->all_data->init_timeval), data->id + 1);
-	usleep(data->all_data->time_to_eat * 1000);
-	pthread_mutex_lock(&data->all_data->mutex);
-	data->all_data->fork[data->id] = 0;
-	data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 0;
-	pthread_mutex_unlock(&data->all_data->mutex);
-	if (data->all_data->number_of_times_each_philosopher_must_eat == 0)
-		data->all_data->is_dead = true;
-}
-
-void	is_sleeping(t_data_philo *data)
-{
-	if (!data->all_data->monitor)
-		printf("%ld %i is sleeping\n",
-			current_time(data->all_data->init_timeval), data->id + 1);
-	usleep(data->all_data->time_to_sleep * 1000);
-}
-
 void	*philo_thread(void *arg_data)
 {
-	bool			think;
-	t_data_philo	*data;
+    bool			think;
+    t_data_philo	*data;
+    long			cur_time;
 
-	think = false;
-	data = (t_data_philo *)arg_data;
-	while (true)
-	{
-		data->time_without_eat = current_time(data->all_data->init_timeval) - data->last_meal_time;
-        
+    think = false;
+    data = (t_data_philo *)arg_data;
+    while (true)
+    {
 		pthread_mutex_lock(&data->all_data->mutex);
-		if ((data->time_without_eat - 1) > data->all_data->time_to_die)
-        {
-			printf("{time_without_eat [%ld] > time_to_die [%d]}\n", data->time_without_eat, data->all_data->time_to_die);
-			printf("{time_without_eat [%ld] > time_to_die [%d]}\n", (data->time_without_eat - 1), data->all_data->time_to_die);
-            if (!data->all_data->monitor)
-            {
-                printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id + 1);
-                data->all_data->is_dead = true;
-                data->all_data->monitor = true;
-            }
-        }
+		cur_time = current_time(data->all_data->init_timeval);
+		data->time_without_eat = cur_time - data->last_meal_time;
+		if (data->time_without_eat > data->all_data->time_to_die +5)
+		{
+			// printf("\ndata->time_without_eat = %ld\n\n", data->time_without_eat);
+			if (!data->all_data->monitor)
+			{
+				printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id + 1);
+				data->all_data->is_dead = true;
+				data->all_data->monitor = true;
+			}
+		}
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (data->all_data->is_dead)
 			return (NULL);

@@ -44,10 +44,13 @@ typedef struct s_data_philo
 	t_all_data_philo	*all_data;
 	long				time_without_eat;
 	long				last_meal_time;
+	bool				have_a_fork;
 }						t_data_philo;
 
 
 void	*philo_thread(void *arg_data);
+void	is_eating(t_data_philo *data);
+void	is_sleeping(t_data_philo *data);
 
 void	free_all_data(t_all_data_philo *data);
 void	init_data_philo(t_data_philo **data, int ac, char **av);

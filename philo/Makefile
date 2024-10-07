@@ -17,7 +17,8 @@ INCLUDE = ./include
 
 FILES = philo.c \
 		philo_utils_1.c \
-		philo_utils_2.c 
+		philo_utils_2.c \
+		philo_utils_3.c
 
 SRC_FILES = $(addprefix $(SRC),$(FILES))
 OBJ = $(FILES:.c=.o)

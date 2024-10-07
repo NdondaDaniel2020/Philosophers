@@ -68,3 +68,8 @@ int	main(void)
 	}
 	return (0);
 }
+
+
+// printf("{cur_time [%ld] - data->last_meal_time [%ld] == [%ld]}\n", cur_time, data->last_meal_time, cur_time - data->last_meal_time);
+// printf("{time_without_eat [%ld] > time_to_die [%d]}\n", data->time_without_eat, data->all_data->time_to_die);
+// printf("{time_without_eat [%ld] > time_to_die [%d]}\n", (data->time_without_eat - 1), data->all_data->time_to_die);

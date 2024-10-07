@@ -17,10 +17,10 @@ void	init_all_data_philo(t_all_data_philo *data, int ac, char **av) /*Prevenir d
 	gettimeofday(&data->init_timeval, NULL);
 	data->number_of_philosophers = ft_atoi(av[1]);
 	data->time_to_die = ft_atoi(av[2]);
-	data->time_to_eat = ft_atoi(av[3]);
+	data->time_to_eat = ft_atoi(av[3]) * 1000;
 	data->is_dead = false;
 	data->monitor = false;
-	data->time_to_sleep = ft_atoi(av[4]);
+	data->time_to_sleep = ft_atoi(av[4]) * 1000;
 	data->number_of_times_each_philosopher_must_eat = -1;
 	if (ac == 6)
 	{
@@ -50,6 +50,7 @@ void	init_data_philo(t_data_philo **data, int ac, char **av)
 	while (i < all_data->number_of_philosophers)
 	{
 		(*data)[i].id = i;
+		(*data)[i].have_a_fork = false;
 		(*data)[i].all_data = all_data;
 		i++;
 	}
