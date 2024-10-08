@@ -1,43 +1,8 @@
-0 3 has taken a fork right
-0 3 has taken a fork left
-0 3 is eating
-0 5 has taken a fork left
-0 5 has taken a fork right
-0 5 is eating
-0 1 has taken a fork right
-0 1 is thinking
-0 2 is thinking
-0 4 is thinking
 
-201 3 is sleeping
-201 4 has taken a fork left
-201 5 is sleeping
-201 1 has taken a fork left
-201 1 is eating
-201 2 has taken a fork right
+			printf("\n{%ld %i atual}", current_time(data->all_data->init_timeval), data->id + 1);
+			printf("\n{%ld %i last}", data->last_meal_time, data->id + 1);
+			printf("\n{%ld %i eat}\n\n", data->time_without_eat, data->id + 1);
 
-401 3 is thinking
-401 5 has taken a fork left
-401 5 is thinking
-401 2 has taken a fork left
-401 2 is eating
-401 5 has taken a fork right
-401 5 is eating
-401 1 is sleeping
-
-601 2 is sleeping
-601 3 has taken a fork left
-601 5 is sleeping
-601 1 has taken a fork right
-601 1 has taken a fork left
-601 1 is eating
-
-801 2 is thinking
-801 5 has taken a fork left
-801 5 is thinking
-801 1 is sleeping
-801 5 has taken a fork right
-801 5 is eating
-803 2 has taken a fork left
-
-806 4 died
+			printf("data->time_without_eat [%ld] > data->all_data->time_to_die [%i]\n", data->time_without_eat, data->all_data->time_to_die);
+			printf("data->time_without_eat [%ld]-5 data->time_without_eat [%ld]+5\n", data->time_without_eat-5, data->time_without_eat+5);
+			

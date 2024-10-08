@@ -51,28 +51,40 @@ bool take_a_fork(t_data_philo *data)
 
 	left = false;
 	right = false;
-	if ((data->id + 1) == data->all_data->number_of_philosophers)
+	if ((data->id + 1) % 2 == 0)
 	{
-		left = take_a_left_fork(data);
 		right = take_a_right_fork(data);
-		if (left && right)
-			return (true);
-		if ((left || right) && data->have_a_fork)
-			return (true);
-		if (left || right)
+		if (right)
+		{
+			left = take_a_left_fork(data);
+			if (left)
+				return (true);
 			data->have_a_fork = true;
+		}
+		if (!right && data->have_a_fork)
+		{
+			left = take_a_left_fork(data);
+			if (left)
+				return (true);
+		}
 		return (false);
 	}
 	else
 	{
-		right = take_a_right_fork(data);
 		left = take_a_left_fork(data);
-		if (left && right)
-			return (true);
-		if ((left || right) && data->have_a_fork)
-			return (true);
-		if (left || right)
+		if (left)
+		{
+			right = take_a_right_fork(data);
+			if (right)
+				return (true);
 			data->have_a_fork = true;
+		}
+		if (!left && data->have_a_fork)
+		{
+			right = take_a_right_fork(data);
+			if (right)
+				return (true);
+		}
 		return (false);
 	}
 }
@@ -90,7 +102,7 @@ void	*philo_thread(void *arg_data)
 		pthread_mutex_lock(&data->all_data->mutex);
 		cur_time = current_time(data->all_data->init_timeval);
 		data->time_without_eat = cur_time - data->last_meal_time;
-		if (data->time_without_eat > data->all_data->time_to_die)
+		if ((data->time_without_eat -5) > data->all_data->time_to_die)
 		{
 			if (!data->all_data->monitor)
 			{
@@ -102,6 +114,7 @@ void	*philo_thread(void *arg_data)
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (data->all_data->is_dead)
 			return (NULL);
+	
 		if (take_a_fork(data))
 		{
 			think = false;
