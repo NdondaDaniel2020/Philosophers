@@ -1,8 +1,7 @@
 
-			printf("\n{%ld %i atual}", current_time(data->all_data->init_timeval), data->id + 1);
-			printf("\n{%ld %i last}", data->last_meal_time, data->id + 1);
-			printf("\n{%ld %i eat}\n\n", data->time_without_eat, data->id + 1);
+printf("\n{%ld %i atual}", current_time(data->all_data->init_timeval), data->id + 1);
+printf("\n{%ld %i last}", data->last_meal_time, data->id + 1);
+printf("\n{%ld %i eat}\n\n", data->time_without_eat, data->id + 1);
 
-			printf("data->time_without_eat [%ld] > data->all_data->time_to_die [%i]\n", data->time_without_eat, data->all_data->time_to_die);
-			printf("data->time_without_eat [%ld]-5 data->time_without_eat [%ld]+5\n", data->time_without_eat-5, data->time_without_eat+5);
-			
+printf("data->time_without_eat [%ld] > data->all_data->time_to_die [%i]\n", data->time_without_eat, data->all_data->time_to_die);
+printf("data->time_without_eat [%ld]-5 data->time_without_eat [%ld]+5\n", data->time_without_eat-5, data->time_without_eat+5);

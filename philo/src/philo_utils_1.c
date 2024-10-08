@@ -19,40 +19,6 @@ void	error(void)
 	write(2, "<time_to_sleep> <number_of_times_each_philosopher_must_eat>", 59);
 }
 
-long	current_time(struct timeval init_tv)
-{
-	long			re;
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	re = ((tv.tv_sec - init_tv.tv_sec) * 1000)
-		+ ((tv.tv_usec - init_tv.tv_usec) / 1000);
-	return (re);
-}
-
-static int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
-int	str_isdigit(char *str)
-{
-	int	i;
-
-	i = 1;
-	while (i && *str)
-	{
-		if (i == '+')
-			i = 1;
-		else
-			i = ft_isdigit(*str);
-		++str;
-	}
-	return (i);
-}
-
 int	ft_atoi(const char *nptr)
 {
 	int	i;
@@ -76,4 +42,52 @@ int	ft_atoi(const char *nptr)
 		i++;
 	}
 	return (r * s);
+}
+
+static int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+static int	str_isdigit(char *str)
+{
+	int	i;
+
+	i = 1;
+	while (i && *str)
+	{
+		if (*str == '+' || *str == '-')
+			i = 1;
+		else
+			i = ft_isdigit(*str);
+		if (i == 0)
+			return (0);
+		++str;
+	}
+	return (i);
+}
+
+bool	check_valid_digit(int i, char **av)
+{
+	if (str_isdigit(av[i]))
+	{	
+		if (i == 1 && ft_atoi(av[i]) > 200)
+		{
+			printf("Error\nThe number of philosophers must be less than 200\n");
+			return (false);
+		}
+		if (ft_atoi(av[i]) < 1)
+		{
+			printf("Error\ninvalid value\n");
+			return (false);
+		}
+	}
+	else
+	{
+		printf("Error\nNot number\n");
+		return (false);
+	}	
+	return (true);
 }

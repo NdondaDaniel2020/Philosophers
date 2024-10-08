@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_utils_2.c                                    :+:      :+:    :+:   */
+/*   philo_init_and_free.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmatondo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-void	init_all_data_philo(t_all_data_philo *data, int ac, char **av) /*Prevenir de todos valores negativos*/
+void	init_all_data_philo(t_all_data_philo *data, int ac, char **av)
 {
 	gettimeofday(&data->init_timeval, NULL);
 	data->number_of_philosophers = ft_atoi(av[1]);
@@ -25,7 +25,7 @@ void	init_all_data_philo(t_all_data_philo *data, int ac, char **av) /*Prevenir d
 	if (ac == 6)
 	{
 		data->number_of_times_each_philosopher_must_eat = \
-			(ft_atoi(av[5]) * ft_atoi(av[1]));
+		(ft_atoi(av[5]) * ft_atoi(av[1]));
 	}
 	data->fork = malloc(sizeof(int) * data->number_of_philosophers);
 	if (!data->fork)

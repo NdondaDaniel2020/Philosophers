@@ -14,11 +14,13 @@ CC = cc
 NAME = ./philo
 SRC = ./src/
 INCLUDE = ./include
-
+FSANITIZE = -fsanitize=thread
 FILES = philo.c \
 		philo_utils_1.c \
-		philo_utils_2.c \
-		philo_utils_3.c
+		philo_time.c \
+		philo_operations.c \
+		philo_init_and_free.c \
+		philo_take_fork.c \
 
 SRC_FILES = $(addprefix $(SRC),$(FILES))
 OBJ = $(FILES:.c=.o)
@@ -29,8 +31,8 @@ PLIBFT = ./libft
 all:    $(NAME)
 
 $(NAME):
-	@$(CC) $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
-	@$(CC) $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
+	@$(CC)  $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
+	@$(CC)  $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
 
 r:
 	@$(CC) rascunho.c -o ./r

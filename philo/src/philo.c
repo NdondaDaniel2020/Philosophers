@@ -12,83 +12,6 @@
 
 #include "philo.h"
 
-bool take_a_left_fork(t_data_philo *data)
-{
-	pthread_mutex_lock(&data->all_data->mutex);
-	if (!data->all_data->fork[data->id])
-	{	
-		data->all_data->fork[data->id] = 1;
-		pthread_mutex_unlock(&data->all_data->mutex);
-		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork left\n", current_time(data->all_data->init_timeval), data->id + 1);
-		return (true);
-	}
-	else
-		pthread_mutex_unlock(&data->all_data->mutex);
-	return (false);
-}
-
-bool take_a_right_fork(t_data_philo *data)
-{
-	pthread_mutex_lock(&data->all_data->mutex);
-	if (!data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers])
-	{
-		data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 1;
-		pthread_mutex_unlock(&data->all_data->mutex);
-		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork right\n", current_time(data->all_data->init_timeval), data->id + 1);
-		return (true);
-	}
-	else
-		pthread_mutex_unlock(&data->all_data->mutex);
-	return (false);
-}
-
-bool take_a_fork(t_data_philo *data)
-{
-	bool	left;
-	bool	right;
-
-	left = false;
-	right = false;
-	if ((data->id + 1) % 2 == 0)
-	{
-		right = take_a_right_fork(data);
-		if (right)
-		{
-			left = take_a_left_fork(data);
-			if (left)
-				return (true);
-			data->have_a_fork = true;
-		}
-		if (!right && data->have_a_fork)
-		{
-			left = take_a_left_fork(data);
-			if (left)
-				return (true);
-		}
-		return (false);
-	}
-	else
-	{
-		left = take_a_left_fork(data);
-		if (left)
-		{
-			right = take_a_right_fork(data);
-			if (right)
-				return (true);
-			data->have_a_fork = true;
-		}
-		if (!left && data->have_a_fork)
-		{
-			right = take_a_right_fork(data);
-			if (right)
-				return (true);
-		}
-		return (false);
-	}
-}
-
 void	*philo_thread(void *arg_data)
 {
     bool			think;
@@ -156,23 +79,23 @@ void	master(int ac, char **av, t_data_philo *data)
 int	main(int ac, char **av)
 {
 	int				i;
-	int				n;
 	t_data_philo	data;
 
 	i = 1;
-	n = 1;
 	if (ac == 6 || ac == 5)
 	{
-		while (av[i] && n)
+		while (i < ac)
 		{
-			n = str_isdigit(av[i]);
+			if (!check_valid_digit(i, av))
+				return (1);
 			i++;
 		}
-		if (n == 0)
-			error();
 		master(ac, av, &data);
 	}
 	else
+	{
 		error();
+		return (1);
+	}
 	return (0);
 }
