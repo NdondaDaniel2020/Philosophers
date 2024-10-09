@@ -12,32 +12,38 @@
 
 #include "philo.h"
 
-void	*philo_thread(void *arg_data)
+static void	check_if_any_philosophers_have_died(t_data_philo *data)
 {
-    bool			think;
-    t_data_philo	*data;
-    long			cur_time;
+	long			cur_time;
 
-    think = false;
-    data = (t_data_philo *)arg_data;
-    while (true)
-    {
-		pthread_mutex_lock(&data->all_data->mutex);
-		cur_time = current_time(data->all_data->init_timeval);
-		data->time_without_eat = cur_time - data->last_meal_time;
-		if ((data->time_without_eat -5) > data->all_data->time_to_die)
+	pthread_mutex_lock(&data->all_data->mutex);
+	cur_time = current_time(data->all_data->init_timeval);
+	data->time_without_eat = cur_time - data->last_meal_time;
+	if ((data->time_without_eat -5) > data->all_data->time_to_die)
+	{
+		if (!data->all_data->monitor)
 		{
-			if (!data->all_data->monitor)
-			{
-				printf("%ld %i died\n", current_time(data->all_data->init_timeval), data->id + 1);
-				data->all_data->is_dead = true;
-				data->all_data->monitor = true;
-			}
+			printf("%ld %i died\n",
+				current_time(data->all_data->init_timeval), data->id + 1);
+			data->all_data->is_dead = true;
+			data->all_data->monitor = true;
 		}
-		pthread_mutex_unlock(&data->all_data->mutex);
+	}
+	pthread_mutex_unlock(&data->all_data->mutex);
+}
+
+static void	*philo_thread(void *arg_data)
+{
+	bool			think;
+	t_data_philo	*data;
+
+	think = false;
+	data = (t_data_philo *)arg_data;
+	while (true)
+	{
+		check_if_any_philosophers_have_died(data);
 		if (data->all_data->is_dead)
 			return (NULL);
-	
 		if (take_a_fork(data))
 		{
 			think = false;
@@ -47,12 +53,13 @@ void	*philo_thread(void *arg_data)
 		else if (!think)
 		{
 			think = true;
-			printf("%ld %i is thinking\n", current_time(data->all_data->init_timeval), data->id + 1);
+			printf("%ld %i is thinking\n",
+				current_time(data->all_data->init_timeval), data->id + 1);
 		}
 	}
 }
 
-void	master(int ac, char **av, t_data_philo *data)
+static void	master(int ac, char **av, t_data_philo *data)
 {
 	int	i;
 

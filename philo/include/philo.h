@@ -47,16 +47,13 @@ typedef struct s_data_philo
 	bool				have_a_fork;
 }						t_data_philo;
 
-
-void	*philo_thread(void *arg_data);
 void	is_eating(t_data_philo *data);
 void	is_sleeping(t_data_philo *data);
 
+bool	take_a_fork(t_data_philo *data);
 void	free_all_data(t_all_data_philo *data);
 void	init_data_philo(t_data_philo **data, int ac, char **av);
 void	init_all_data_philo(t_all_data_philo *data, int ac, char **av);
-
-bool take_a_fork(t_data_philo *data);
 
 void	error(void);
 bool	check_valid_digit(int i, char **av);

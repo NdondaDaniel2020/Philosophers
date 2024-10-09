@@ -12,15 +12,16 @@
 
 #include "philo.h"
 
-static bool take_a_left_fork(t_data_philo *data)
+static bool	take_a_left_fork(t_data_philo *data)
 {
 	pthread_mutex_lock(&data->all_data->mutex);
 	if (!data->all_data->fork[data->id])
-	{	
+	{
 		data->all_data->fork[data->id] = 1;
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork left\n", current_time(data->all_data->init_timeval), data->id + 1);
+			printf("%ld %i has taken a fork left\n",
+				current_time(data->all_data->init_timeval), data->id + 1);
 		return (true);
 	}
 	else
@@ -28,15 +29,18 @@ static bool take_a_left_fork(t_data_philo *data)
 	return (false);
 }
 
-static bool take_a_right_fork(t_data_philo *data)
+static bool	take_a_right_fork(t_data_philo *data)
 {
 	pthread_mutex_lock(&data->all_data->mutex);
-	if (!data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers])
+	if (!data->all_data->fork[(data->id + 1)
+			% data->all_data->number_of_philosophers])
 	{
-		data->all_data->fork[(data->id + 1) % data->all_data->number_of_philosophers] = 1;
+		data->all_data->fork[(data->id + 1)
+			% data->all_data->number_of_philosophers] = 1;
 		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork right\n", current_time(data->all_data->init_timeval), data->id + 1);
+			printf("%ld %i has taken a fork right\n",
+				current_time(data->all_data->init_timeval), data->id + 1);
 		return (true);
 	}
 	else
@@ -44,47 +48,58 @@ static bool take_a_right_fork(t_data_philo *data)
 	return (false);
 }
 
-bool take_a_fork(t_data_philo *data)
+static bool	even_philosofer(t_data_philo *data)
 {
 	bool	left;
 	bool	right;
 
 	left = false;
 	right = false;
-	if ((data->id + 1) % 2 == 0)
-	{
-		right = take_a_right_fork(data);
-		if (right)
-		{
-			left = take_a_left_fork(data);
-			if (left)
-				return (true);
-			data->have_a_fork = true;
-		}
-		if (!right && data->have_a_fork)
-		{
-			left = take_a_left_fork(data);
-			if (left)
-				return (true);
-		}
-		return (false);
-	}
-	else
+	right = take_a_right_fork(data);
+	if (right)
 	{
 		left = take_a_left_fork(data);
 		if (left)
-		{
-			right = take_a_right_fork(data);
-			if (right)
-				return (true);
-			data->have_a_fork = true;
-		}
-		if (!left && data->have_a_fork)
-		{
-			right = take_a_right_fork(data);
-			if (right)
-				return (true);
-		}
-		return (false);
+			return (true);
+		data->have_a_fork = true;
 	}
+	if (!right && data->have_a_fork)
+	{
+		left = take_a_left_fork(data);
+		if (left)
+			return (true);
+	}
+	return (false);
+}
+
+static bool	odd_philosofer(t_data_philo *data)
+{
+	bool	left;
+	bool	right;
+
+	left = false;
+	right = false;
+	left = take_a_left_fork(data);
+	if (left)
+	{
+		right = take_a_right_fork(data);
+		if (right)
+			return (true);
+		data->have_a_fork = true;
+	}
+	if (!left && data->have_a_fork)
+	{
+		right = take_a_right_fork(data);
+		if (right)
+			return (true);
+	}
+	return (false);
+}
+
+bool	take_a_fork(t_data_philo *data)
+{
+	if ((data->id + 1) % 2 == 0)
+		return (even_philosofer(data));
+	else
+		return (odd_philosofer(data));
 }

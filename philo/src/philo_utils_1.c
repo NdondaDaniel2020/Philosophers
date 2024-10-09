@@ -72,10 +72,10 @@ static int	str_isdigit(char *str)
 bool	check_valid_digit(int i, char **av)
 {
 	if (str_isdigit(av[i]))
-	{	
+	{
 		if (i == 1 && ft_atoi(av[i]) > 200)
 		{
-			printf("Error\nThe number of philosophers must be less than 200\n");
+			printf("Error\nmore than 200 philosophers\n");
 			return (false);
 		}
 		if (ft_atoi(av[i]) < 1)
@@ -88,6 +88,6 @@ bool	check_valid_digit(int i, char **av)
 	{
 		printf("Error\nNot number\n");
 		return (false);
-	}	
+	}
 	return (true);
 }

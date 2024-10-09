@@ -31,7 +31,7 @@ PLIBFT = ./libft
 all:    $(NAME)
 
 $(NAME):
-	@$(CC)  $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
+	$(CC)  $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
 	@$(CC)  $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
 
 r:
