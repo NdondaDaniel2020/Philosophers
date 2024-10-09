@@ -15,26 +15,58 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
-long	current_time(struct timeval init_tv)
+static bool	even_philosofer(t_data_philo *data)
 {
-	long			re;
-	struct timeval	tv;
+	bool	left;
+	bool	right;
 
-	gettimeofday(&tv, NULL);
-	re = ((tv.tv_sec - init_tv.tv_sec) * 1000)
-		+ ((tv.tv_usec - init_tv.tv_usec) / 1000);
-	return (re);
+	left = false;
+	right = false;
+	right = take_a_right_fork(data);
+	if (right)
+	{
+		left = take_a_left_fork(data);
+		if (left)
+			return (true);
+		data->have_a_fork = true;
+	}
+	if (!right && data->have_a_fork)
+	{
+		left = take_a_left_fork(data);
+		if (left)
+			return (true);
+	}
+	return (false);
 }
 
-int	main(void)
+static bool	odd_philosofer(t_data_philo *data)
 {
-	long			re;
-	struct timeval	init_tv;
+	bool	left;
+	bool	right;
 
-	gettimeofday(&init_tv, NULL);
-	while (true)
+	left = false;
+	right = false;
+	left = take_a_left_fork(data);
+	if (left)
 	{
-		printf("%ld\n", current_time(init_tv));
+		right = take_a_right_fork(data);
+		if (right)
+			return (true);
+		data->have_a_fork = true;
 	}
-	return (0);
+	if (!left && data->have_a_fork)
+	{
+		right = take_a_right_fork(data);
+		if (right)
+			return (true);
+	}
+	return (false);
+}
+
+bool	take_a_fork(t_data_philo *data)
+{
+	if ((data->id + 1) % 2 == 0)
+		return (even_philosofer(data));
+	else
+		return (odd_philosofer(data));
 }

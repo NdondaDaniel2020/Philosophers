@@ -30,9 +30,9 @@ void	is_eating(t_data_philo *data)
 	data->all_data->fork[data->id] = 0;
 	data->all_data->fork[(data->id + 1)
 		% data->all_data->number_of_philosophers] = 0;
-	pthread_mutex_unlock(&data->all_data->mutex);
 	if (data->all_data->number_of_times_each_philosopher_must_eat == 0)
 		data->all_data->is_dead = true;
+	pthread_mutex_unlock(&data->all_data->mutex);
 }
 
 void	is_sleeping(t_data_philo *data)
