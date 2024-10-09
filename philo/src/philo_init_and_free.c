@@ -52,6 +52,8 @@ void	init_data_philo(t_data_philo **data, int ac, char **av)
 		(*data)[i].id = i;
 		(*data)[i].have_a_fork = false;
 		(*data)[i].all_data = all_data;
+		(*data)[i].time_without_eat = -1;
+		(*data)[i].last_meal_time = -1;
 		i++;
 	}
 	i = 0;

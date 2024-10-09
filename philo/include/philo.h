@@ -23,7 +23,6 @@
 
 typedef struct s_all_data_philo
 {
-	int				id;
 	pthread_t		*thread;
 	pthread_mutex_t	mutex;
 	int				*fork;
@@ -34,7 +33,6 @@ typedef struct s_all_data_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_times_each_philosopher_must_eat;
-	int				number_of_times_philosophers_should_eat;
 	struct timeval	init_timeval;
 }					t_all_data_philo;
 
