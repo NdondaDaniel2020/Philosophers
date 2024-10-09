@@ -18,14 +18,12 @@ static bool	take_a_left_fork(t_data_philo *data)
 	if (!data->all_data->fork[data->id])
 	{
 		data->all_data->fork[data->id] = 1;
-		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork left\n",
-				current_time(data->all_data->init_timeval), data->id + 1);
+			print_menssage(data, "has taken a fork");
+		pthread_mutex_unlock(&data->all_data->mutex);
 		return (true);
 	}
-	else
-		pthread_mutex_unlock(&data->all_data->mutex);
+	pthread_mutex_unlock(&data->all_data->mutex);
 	return (false);
 }
 
@@ -37,14 +35,12 @@ static bool	take_a_right_fork(t_data_philo *data)
 	{
 		data->all_data->fork[(data->id + 1)
 			% data->all_data->number_of_philosophers] = 1;
-		pthread_mutex_unlock(&data->all_data->mutex);
 		if (!data->all_data->monitor)
-			printf("%ld %i has taken a fork right\n",
-				current_time(data->all_data->init_timeval), data->id + 1);
+			print_menssage(data, "has taken a fork");
+		pthread_mutex_unlock(&data->all_data->mutex);
 		return (true);
 	}
-	else
-		pthread_mutex_unlock(&data->all_data->mutex);
+	pthread_mutex_unlock(&data->all_data->mutex);
 	return (false);
 }
 

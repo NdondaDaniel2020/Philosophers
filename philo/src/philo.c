@@ -23,8 +23,7 @@ static void	check_if_any_philosophers_have_died(t_data_philo *data)
 	{
 		if (!data->all_data->monitor)
 		{
-			printf("%ld %i died\n",
-				current_time(data->all_data->init_timeval), data->id + 1);
+			print_menssage(data, "died");
 			data->all_data->is_dead = true;
 			data->all_data->monitor = true;
 		}
@@ -53,8 +52,7 @@ static void	*philo_thread(void *arg_data)
 		else if (!think)
 		{
 			think = true;
-			printf("%ld %i is thinking\n",
-				current_time(data->all_data->init_timeval), data->id + 1);
+			print_menssage(data, "is thinking");
 		}
 	}
 }
@@ -66,6 +64,7 @@ static void	master(int ac, char **av, t_data_philo *data)
 	i = 0;
 	init_data_philo(&data, ac, av);
 	pthread_mutex_init(&data[0].all_data->mutex, NULL);
+	pthread_mutex_init(&data[0].all_data->mutex_msg, NULL);
 	while (i < data[0].all_data->number_of_philosophers)
 	{
 		pthread_create(&data[0].all_data->thread[i], NULL,
@@ -79,6 +78,7 @@ static void	master(int ac, char **av, t_data_philo *data)
 		i++;
 	}
 	pthread_mutex_destroy(&data[0].all_data->mutex);
+	pthread_mutex_destroy(&data[0].all_data->mutex_msg);
 	free_all_data(data[0].all_data);
 	free(data);
 }

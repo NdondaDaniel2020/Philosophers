@@ -25,6 +25,7 @@ typedef struct s_all_data_philo
 {
 	pthread_t		*thread;
 	pthread_mutex_t	mutex;
+	pthread_mutex_t	mutex_msg;
 	int				*fork;
 	bool			is_dead;
 	bool			monitor;
@@ -54,6 +55,7 @@ void	init_data_philo(t_data_philo **data, int ac, char **av);
 void	init_all_data_philo(t_all_data_philo *data, int ac, char **av);
 
 void	error(void);
+void	print_menssage(t_data_philo *data, char *mensage);
 bool	check_valid_digit(int i, char **av);
 int		ft_atoi(const char *nptr);
 long	current_time(struct timeval init_tv);

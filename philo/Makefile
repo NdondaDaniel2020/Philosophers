@@ -13,7 +13,7 @@
 # valgrind --tool=helgrind ./philo 4 310 200 100
 # valgrind --tool=drd ./philo 4 310 200 100
 
-CC = cc
+CC = cc 
 NAME = ./philo
 SRC = ./src/
 INCLUDE = ./include

@@ -23,8 +23,7 @@ void	is_eating(t_data_philo *data)
 		pthread_mutex_unlock(&data->all_data->mutex);
 	}
 	if (!data->all_data->monitor)
-		printf("%ld %i is eating\n",
-			current_time(data->all_data->init_timeval), data->id + 1);
+		print_menssage(data, "is eating");
 	usleep(data->all_data->time_to_eat);
 	pthread_mutex_lock(&data->all_data->mutex);
 	data->all_data->fork[data->id] = 0;
@@ -38,7 +37,6 @@ void	is_eating(t_data_philo *data)
 void	is_sleeping(t_data_philo *data)
 {
 	if (!data->all_data->monitor)
-		printf("%ld %i is sleeping\n",
-			current_time(data->all_data->init_timeval), data->id + 1);
+		print_menssage(data, "is sleeping");
 	usleep(data->all_data->time_to_sleep);
 }

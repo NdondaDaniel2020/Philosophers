@@ -22,3 +22,11 @@ long	current_time(struct timeval init_tv)
 		+ ((tv.tv_usec - init_tv.tv_usec) / 1000);
 	return (re);
 }
+
+void	print_menssage(t_data_philo *data, char *mensage)
+{
+	pthread_mutex_lock(&data->all_data->mutex_msg);
+	printf("%ld %i %s\n", current_time(data->all_data->init_timeval),
+		data->id + 1, mensage);
+	pthread_mutex_unlock(&data->all_data->mutex_msg);
+}
