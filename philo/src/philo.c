@@ -19,7 +19,7 @@ static void	check_if_any_philosophers_have_died(t_data_philo *data)
 	pthread_mutex_lock(&data->all_data->mutex);
 	cur_time = current_time(data->all_data->init_timeval);
 	data->time_without_eat = cur_time - data->last_meal_time;
-	if ((data->time_without_eat -5) > data->all_data->time_to_die)
+	if (data->time_without_eat > data->all_data->time_to_die + 5)
 	{
 		if (!data->all_data->monitor)
 		{

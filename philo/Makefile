@@ -10,11 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
+# valgrind --tool=helgrind ./philo 4 310 200 100
+# valgrind --tool=drd ./philo 4 310 200 100
+
 CC = cc
 NAME = ./philo
 SRC = ./src/
 INCLUDE = ./include
-FSANITIZE = -fsanitize=thread
 FILES = philo.c \
 		philo_utils_1.c \
 		philo_time.c \
@@ -31,7 +33,7 @@ PLIBFT = ./libft
 all:    $(NAME)
 
 $(NAME):
-	$(CC)  $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
+	$(CC)   $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
 	@$(CC)  $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
 
 r:
