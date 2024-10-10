@@ -16,12 +16,10 @@ void	is_eating(t_data_philo *data)
 {
 	data->have_a_fork = false;
 	data->last_meal_time = current_time(data->all_data->init_timeval);
+	pthread_mutex_lock(&data->all_data->mutex);
 	if (data->all_data->number_of_times_each_philosopher_must_eat > 0)
-	{
-		pthread_mutex_lock(&data->all_data->mutex);
 		data->all_data->number_of_times_each_philosopher_must_eat--;
-		pthread_mutex_unlock(&data->all_data->mutex);
-	}
+	pthread_mutex_unlock(&data->all_data->mutex);
 	if (!data->all_data->monitor)
 		print_menssage(data, "is eating");
 	usleep(data->all_data->time_to_eat);
