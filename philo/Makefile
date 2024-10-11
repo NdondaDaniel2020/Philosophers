@@ -14,6 +14,9 @@
 # valgrind --tool=drd ./philo 4 310 200 100
 #  -fsanitize=thread
 
+# while [ 1 ];do sleep 1;clear; valgrind --tool=helgrind ./philo 4 310 200 100; done 
+# while [ 1 ];do sleep 1;clear; valgrind --tool=drd ./philo 4 310 200 100; done 
+
 CC = cc
 NAME = ./philo
 SRC = ./src/
@@ -34,8 +37,8 @@ PLIBFT = ./libft
 all:    $(NAME)
 
 $(NAME):
-	$(CC)   $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
-	@$(CC)  $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
+	$(CC) $(FLAGS) -c $(SRC_FILES) -I$(INCLUDE)
+	@$(CC) $(FLAGS) $(OBJ) -I$(INCLUDE) -o $(NAME)
 
 r:
 	@$(CC) rascunho.c -o ./r

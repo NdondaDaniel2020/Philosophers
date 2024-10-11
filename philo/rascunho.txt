@@ -208,3 +208,42 @@ while [ 1 ];do sleep 1;clear; valgrind --tool=helgrind ./philo 4 310 200 100; do
 ================================================================================================================
 ================================================================================================================
 
+
+================================================================================================================
+================================================================================================================
+
+WARNING: ThreadSanitizer: data race (pid=8109)
+  Write of size 1 at 0x722400000060 by thread T3 (mutexes: write M0):                                              
+    #0 check_if_any_philosophers_have_died <null> (philo+0x13e9) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #1 philo_thread <null> (philo+0x1479) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+
+  Previous read of size 1 at 0x722400000060 by thread T1:
+    #0 philo_thread <null> (philo+0x149d) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)                      
+
+  Location is heap block of size 136 at 0x722400000000 allocated by main thread:
+    #0 malloc ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:665 (libtsan.so.2+0x51656) (BuildId: c2c122d13c5e4efea2b39fe0bff06e05bd1e8555)
+    #1 init_data_philo <null> (philo+0x240b) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #2 master <null> (philo+0x1550) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #3 main <null> (philo+0x181b) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+
+  Mutex M0 (0x722400000008) created at:
+    #0 pthread_mutex_init ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1315 (libtsan.so.2+0x5545f) (BuildId: c2c122d13c5e4efea2b39fe0bff06e05bd1e8555)
+    #1 master <null> (philo+0x1581) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #2 main <null> (philo+0x181b) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+
+  Thread T3 (tid=8113, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x568a6) (BuildId: c2c122d13c5e4efea2b39fe0bff06e05bd1e8555)
+    #1 master <null> (philo+0x162e) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #2 main <null> (philo+0x181b) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+
+  Thread T1 (tid=8111, running) created by main thread at:
+    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x568a6) (BuildId: c2c122d13c5e4efea2b39fe0bff06e05bd1e8555)
+    #1 master <null> (philo+0x162e) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+    #2 main <null> (philo+0x181b) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7)
+
+SUMMARY: ThreadSanitizer: data race (/home/kali/Code/Philosophers/philo/philo+0x13e9) (BuildId: 0716317b26f82c554ded14cfe53475780e46e8c7) in check_if_any_philosophers_have_died
+==================
+ThreadSanitizer: reported 1 warnings
+
+================================================================================================================
+================================================================================================================

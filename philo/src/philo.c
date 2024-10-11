@@ -41,8 +41,13 @@ static void	*philo_thread(void *arg_data)
 	while (true)
 	{
 		check_if_any_philosophers_have_died(data);
+		pthread_mutex_lock(&data->all_data->mutex);
 		if (data->all_data->is_dead)
+		{
+			pthread_mutex_unlock(&data->all_data->mutex);
 			return (NULL);
+		}
+		pthread_mutex_unlock(&data->all_data->mutex);
 		if (take_a_fork(data))
 		{
 			think = false;
