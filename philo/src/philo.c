@@ -31,6 +31,21 @@ static void	check_if_any_philosophers_have_died(t_data_philo *data)
 	pthread_mutex_unlock(&data->all_data->mutex);
 }
 
+static void	operation(t_data_philo *data, bool *think)
+{
+	if (take_a_fork(data))
+	{
+		*think = false;
+		is_eating(data);
+		is_sleeping(data);
+	}
+	else if (!think)
+	{
+		*think = true;
+		print_menssage(data, "is thinking");
+	}
+}
+
 static void	*philo_thread(void *arg_data)
 {
 	bool			think;
@@ -48,17 +63,7 @@ static void	*philo_thread(void *arg_data)
 			return (NULL);
 		}
 		pthread_mutex_unlock(&data->all_data->mutex);
-		if (take_a_fork(data))
-		{
-			think = false;
-			is_eating(data);
-			is_sleeping(data);
-		}
-		else if (!think)
-		{
-			think = true;
-			print_menssage(data, "is thinking");
-		}
+		operation(data, &think);
 	}
 }
 
