@@ -19,7 +19,7 @@ FILES = philo.c \
 		philo_time.c \
 		philo_operations.c \
 		philo_init_and_free.c \
-		philo_take_fork.c \
+		philo_take_fork.c
 
 SRC_FILES = $(addprefix $(SRC),$(FILES))
 OBJ = $(FILES:.c=.o)
